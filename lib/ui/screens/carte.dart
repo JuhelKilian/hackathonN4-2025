@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:tous_au_sport/data/marker.dart';
 
 class Carte extends StatefulWidget {
   const Carte({super.key, required this.title});
@@ -20,9 +21,17 @@ class Carte extends StatefulWidget {
   State<Carte> createState() => _CarteState();
 }
 
+
 class _CarteState extends State<Carte> {
   double latitudeAngers = 47.4698;
   double longitudeAngers = -0.5593;
+
+  final List<LatLng> coordinnesMarkers = [
+    LatLng(47.4798, -0.5493),
+    LatLng(47.4698, -0.5593),
+  ];
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +46,27 @@ class _CarteState extends State<Carte> {
           userAgentPackageName: 'com.example.app',
           // And many more recommended properties!
         ),
+        MarkerLayer(
+          markers: [
+            Marker(
+              point: coordinnesMarkers[0],
+              child: Icon(
+                  Icons.location_pin,
+                  color: Colors.red
+              ),
+            ),
+            Marker(
+              point: coordinnesMarkers[1],
+              child: Icon(
+                  Icons.location_pin,
+                  color: Colors.red
+              ),
+            ),
+          ],
+        ),
       ],
     );
+
+
   }
 }
