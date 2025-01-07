@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:tous_au_sport/data/marker.dart';
+import 'package:tous_au_sport/utils/fonctionRequetes.dart';
 
 class Carte extends StatefulWidget {
   const Carte({super.key, required this.title});
@@ -26,16 +27,22 @@ class _CarteState extends State<Carte> {
   double latitudeAngers = 47.4698;
   double longitudeAngers = -0.5593;
 
-  final List<LatLng> coordinnesMarkers = [
-    LatLng(47.4798, -0.5493),
-    LatLng(47.4698, -0.5593),
-  ];
-
-
-
+  List<LatLng> coordinnesMarkers = [];
+// List<LatLng> coordinnesMarkers = await recupererInfoParkings();
   @override
   Widget build(BuildContext context) {
-    return FlutterMap(
+    return Scaffold(
+        appBar: AppBar(
+        title: const Text('Réservation'),
+        leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () => recupererInfoParkings,
+        ),
+    backgroundColor: Colors.white,
+    elevation: 0,
+
+    ),
+    body: FlutterMap(
       options: MapOptions(
         initialCenter: LatLng(latitudeAngers, longitudeAngers), // Center the map over London
         initialZoom: 13,
@@ -47,26 +54,35 @@ class _CarteState extends State<Carte> {
           // And many more recommended properties!
         ),
         MarkerLayer(
-          markers: [
-            Marker(
-              point: coordinnesMarkers[0],
-              child: Icon(
-                  Icons.location_pin,
-                  color: Colors.red
-              ),
-            ),
-            Marker(
-              point: coordinnesMarkers[1],
-              child: Icon(
-                  Icons.location_pin,
-                  color: Colors.red
-              ),
-            ),
-          ],
+          markers: afficherMarkers()
         ),
       ],
+    ),
     );
+  }
 
+  List<Marker> afficherMarkers() {
+    List<Marker> listeR = [];
+
+    for(int i = 0; i < coordinnesMarkers.length; i++) {
+      listeR.add(
+        Marker(
+          point: coordinnesMarkers[i],
+          child: Icon(
+              Icons.location_pin,
+              color: Colors.red
+          ),
+        ),
+      );
+    }
+    return listeR;
+  }
+
+  Future<List<LatLng>> recupererInfoParkings() async {
+
+    List<LatLng> infoParkins = await recupererParkings();
+    return infoParkins;
 
   }
+
 }
