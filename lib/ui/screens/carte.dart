@@ -3,7 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:tous_au_sport/data/marker.dart';
 import 'package:tous_au_sport/utils/fonctionRequetes.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
 class Carte extends StatefulWidget {
   const Carte({super.key, required this.title});
 
@@ -36,7 +36,9 @@ class _CarteState extends State<Carte> {
         title: const Text('Réservation'),
         leading: IconButton(
         icon: const Icon(Icons.arrow_back),
-        onPressed: () => recupererInfoParkings,
+        onPressed: () => setState(() {
+          recupererInfoParkings();
+        })
         ),
     backgroundColor: Colors.white,
     elevation: 0,
@@ -81,7 +83,8 @@ class _CarteState extends State<Carte> {
   Future<List<LatLng>> recupererInfoParkings() async {
 
     List<LatLng> infoParkins = await recupererParkings();
-    return infoParkins;
+    coordinnesMarkers = infoParkins;
+    return coordinnesMarkers;
 
   }
 
