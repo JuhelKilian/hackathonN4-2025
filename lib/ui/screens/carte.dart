@@ -27,12 +27,21 @@ class _CarteState extends State<Carte> {
   double latitudeAngers = 47.4698;
   double longitudeAngers = -0.5593;
 
-  List<LatLng> coordinnesMarkers = [];
+  List<LatLng> coordinnesMarkers = [
+    LatLng(47.4698, -0.5593),
+    LatLng(47.4688, -0.5583),
+  ];
+  List<LatLng> coordinnesActivites = [
+    LatLng(47.4678, -0.5593),
+    LatLng(47.4668, -0.5583),
+  ];
+
 
   @override
   void initState() {
     super.initState();
     recupererInfoParkings();
+    recupererInfoActivites();
   }
 
 // List<LatLng> coordinnesMarkers = await recupererInfoParkings();
@@ -45,6 +54,7 @@ class _CarteState extends State<Carte> {
         icon: const Icon(Icons.arrow_back),
         onPressed: () => setState(() {
           recupererInfoParkings();
+          recupererInfoActivites();
         })
         ),
     backgroundColor: Colors.white,
@@ -84,17 +94,30 @@ class _CarteState extends State<Carte> {
         ),
       );
     }
+
+    for(int i = 0; i < coordinnesActivites.length; i++) {
+      listeR.add(
+        Marker(
+          point: coordinnesActivites[i],
+          child: Icon(
+              Icons.location_pin,
+              color: Colors.brown
+          ),
+        ),
+      );
+    }
     return listeR;
   }
 
   Future<List<LatLng>> recupererInfoParkings() async {
-
     List<LatLng> infoParkins = await recupererParkings();
     coordinnesMarkers = infoParkins;
     return coordinnesMarkers;
-
   }
 
-
-
+  Future<List<LatLng>> recupererInfoActivites() async {
+    List<LatLng> infoParkins = await recupererActivites();
+    coordinnesActivites = infoParkins;
+    return coordinnesActivites;
+  }
 }
