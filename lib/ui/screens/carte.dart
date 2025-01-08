@@ -28,6 +28,13 @@ class _CarteState extends State<Carte> {
   double longitudeAngers = -0.5593;
 
   List<LatLng> coordinnesMarkers = [];
+
+  @override
+  void initState() {
+    super.initState();
+    recupererInfoParkings();
+  }
+
 // List<LatLng> coordinnesMarkers = await recupererInfoParkings();
   @override
   Widget build(BuildContext context) {
@@ -87,5 +94,7 @@ class _CarteState extends State<Carte> {
     return coordinnesMarkers;
 
   }
+
+
 
 }
