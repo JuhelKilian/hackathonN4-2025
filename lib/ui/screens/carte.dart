@@ -28,12 +28,12 @@ class _CarteState extends State<Carte> {
   double longitudeAngers = -0.5593;
 
   List<LatLng> coordinnesMarkers = [
-    LatLng(47.4698, -0.5593),
-    LatLng(47.4688, -0.5583),
+    /*LatLng(47.4698, -0.5593),
+    LatLng(47.4688, -0.5583),*/
   ];
   List<LatLng> coordinnesActivites = [
-    LatLng(47.4678, -0.5593),
-    LatLng(47.4668, -0.5583),
+    /*LatLng(47.4678, -0.5593),
+    LatLng(47.4668, -0.5583),*/
   ];
 
 
@@ -61,22 +61,117 @@ class _CarteState extends State<Carte> {
     elevation: 0,
 
     ),
-    body: FlutterMap(
-      options: MapOptions(
-        initialCenter: LatLng(latitudeAngers, longitudeAngers), // Center the map over London
-        initialZoom: 13,
-      ),
-      children: [
-        TileLayer( // Display map tiles from any source
-          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', // OSMF's Tile Server
-          userAgentPackageName: 'com.example.app',
-          // And many more recommended properties!
+
+    body:
+      Center(
+        child: Container(
+          child: Stack(
+            children: [
+              FlutterMap(
+                options: MapOptions(
+                  initialCenter: LatLng(latitudeAngers, longitudeAngers), // Center the map over London
+                  initialZoom: 13,
+                ),
+                children: [
+                  TileLayer( // Display map tiles from any source
+                    urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', // OSMF's Tile Server
+                    userAgentPackageName: 'com.example.app',
+                    // And many more recommended properties!
+                  ),
+                  MarkerLayer(
+                      markers: afficherMarkers()
+                  ),
+                ],
+              ),
+
+              // Ajouter le reste ici dans le stack.
+              Positioned(
+                top: 20,
+                left: 30,
+                child: Container(
+                  width: 200,
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Icon(
+                              Icons.location_on,
+                              color: Colors.red
+                          ),
+                          SizedBox(width: 12),
+                          Text('Parking à vélo',
+                            style: TextStyle(
+                              shadows: <Shadow>[
+                                Shadow(
+                                  offset: Offset(0.0, 0.0),
+                                  blurRadius: 2.0,
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                ),
+                                Shadow(
+                                  offset: Offset(0.0, 0.0),
+                                  blurRadius: 2.0,
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                ),
+                                Shadow(
+                                  offset: Offset(0.0, 0.0),
+                                  blurRadius: 2.0,
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                ),
+                                Shadow(
+                                  offset: Offset(0.0, 0.0),
+                                  blurRadius: 2.0,
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                ),
+
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Icon(
+                              Icons.location_on,
+                              color: Colors.brown
+                          ),
+                          SizedBox(width: 12),
+                          Text('Activité à Angers',
+                            style: TextStyle(
+                              shadows: <Shadow>[
+                                Shadow(
+                                  offset: Offset(0.0, 0.0),
+                                  blurRadius: 2.0,
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                ),
+                                Shadow(
+                                  offset: Offset(0.0, 0.0),
+                                  blurRadius: 2.0,
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                ),
+                                Shadow(
+                                  offset: Offset(0.0, 0.0),
+                                  blurRadius: 2.0,
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                ),
+                                Shadow(
+                                  offset: Offset(0.0, 0.0),
+                                  blurRadius: 2.0,
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                ),
+
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  )
+                )
+              )
+            ],
+          ),
         ),
-        MarkerLayer(
-          markers: afficherMarkers()
-        ),
-      ],
-    ),
+      )
     );
   }
 
@@ -109,10 +204,9 @@ class _CarteState extends State<Carte> {
     return listeR;
   }
 
-  Future<List<LatLng>> recupererInfoParkings() async {
+  Future<void> recupererInfoParkings() async {
     List<LatLng> infoParkins = await recupererParkings();
     coordinnesMarkers = infoParkins;
-    return coordinnesMarkers;
   }
 
   Future<List<LatLng>> recupererInfoActivites() async {

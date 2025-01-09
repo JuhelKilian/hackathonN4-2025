@@ -17,7 +17,7 @@ Future<List<LatLng>> recupererActivites() async {
 
   // Création de la requete
   var headers = {
-    'Accept': 'application/json',
+    'Accept': 'application/json'
   };
 
   String url = 'https://angersloiremetropole.opendatasoft.com'
@@ -41,7 +41,8 @@ Future<List<LatLng>> recupererActivites() async {
     dynamic reponse2 = reponse["results"];
 
     for(int i = 0; i < reponse2.length; i++) {
-      listeR.add(LatLng(reponse2[i]['geo_point_2d']["lat"], reponse2[i]['geo_point_2d']["lon"]));
+      listeR.add(LatLng(reponse2[i]['geo_point_2d']["lat"],
+          reponse2[i]['geo_point_2d']["lon"]));
     }
 
     return listeR;
@@ -95,7 +96,8 @@ Future<List<LatLng>> recupererParkings() async {
 
       for(int i = 0; i < reponse2.length; i++) {
         plus++;
-        listeR.add(LatLng(reponse2[i]['geo_point_2d']["lat"] + plus/8000, reponse2[i]['geo_point_2d']["lon"] + plus/8000));
+        listeR.add(LatLng(reponse2[i]['geo_point_2d']["lat"],
+            reponse2[i]['geo_point_2d']["lon"]));
       }
 
     } else {
