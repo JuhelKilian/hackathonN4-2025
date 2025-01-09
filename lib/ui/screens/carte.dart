@@ -36,14 +36,14 @@ class _CarteState extends State<Carte> {
     LatLng(47.4668, -0.5583),*/
   ];
 
-  List<Map<dynamic, dynamic>> infosActivites = [];
+  List<String> infosActivites = [];
 
 
   @override
   void initState() {
     super.initState();
-    /*recupererInfoParkings();
-    recupererInfoActivites();*/
+    recupererInfoParkings();
+    recupererInfoActivites();
   }
 
 // List<LatLng> coordinnesMarkers = await recupererInfoParkings();
@@ -70,10 +70,21 @@ class _CarteState extends State<Carte> {
           child: Column(
             children: [
               Container(
-                child: Text("test"),
+                child:
+                  DropdownButton(
+                      items:
+                      infosActivites.map((String value) {
+                        return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                        );
+                        }
+                      ).toList(),
+                      onChanged: (_) {})
               ),
-
-              Container(
+              Stack(
+                children: [
+                Expanded(child: Container(
                   child: FlutterMap(
                     options: MapOptions(
                       initialCenter: LatLng(latitudeAngers, longitudeAngers), // Center the map over London
@@ -90,90 +101,92 @@ class _CarteState extends State<Carte> {
                       ),
                     ],
                   ),
-                  height:500
-                ),
-              // Ajouter le reste ici dans le stack.
-              Positioned(
-                top: 20,
-                left: 30,
-                child: Container(
-                  width: 200,
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Icon(
-                              Icons.location_on,
-                              color: Colors.red
-                          ),
-                          SizedBox(width: 15),
-                          Text('Parking à vélo',
-                            style: TextStyle(
-                              shadows: <Shadow>[
-                                Shadow(
-                                  offset: Offset(0.0, 0.0),
-                                  blurRadius: 2.0,
-                                  color: Color.fromARGB(255, 255, 255, 255),
-                                ),
-                                Shadow(
-                                  offset: Offset(0.0, 0.0),
-                                  blurRadius: 2.0,
-                                  color: Color.fromARGB(255, 255, 255, 255),
-                                ),
-                                Shadow(
-                                  offset: Offset(0.0, 0.0),
-                                  blurRadius: 2.0,
-                                  color: Color.fromARGB(255, 255, 255, 255),
-                                ),
-                                Shadow(
-                                  offset: Offset(0.0, 0.0),
-                                  blurRadius: 2.0,
-                                  color: Color.fromARGB(255, 255, 255, 255),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: <Widget>[
-                          Icon(
-                              Icons.location_on,
-                              color: Colors.brown
-                          ),
-                          SizedBox(width: 15),
-                          Text('Activités à Angers',
-                            style: TextStyle(
-                              shadows: <Shadow>[
-                                Shadow(
-                                  offset: Offset(0.0, 0.0),
-                                  blurRadius: 2.0,
-                                  color: Color.fromARGB(255, 255, 255, 255),
-                                ),
-                                Shadow(
-                                  offset: Offset(0.0, 0.0),
-                                  blurRadius: 2.0,
-                                  color: Color.fromARGB(255, 255, 255, 255),
-                                ),
-                                Shadow(
-                                  offset: Offset(0.0, 0.0),
-                                  blurRadius: 2.0,
-                                  color: Color.fromARGB(255, 255, 255, 255),
-                                ),
-                                Shadow(
-                                  offset: Offset(0.0, 0.0),
-                                  blurRadius: 2.0,
-                                  color: Color.fromARGB(255, 255, 255, 255),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  )
+                  height: 848,
                 )
-              ),
+                ),
+                // Ajouter le reste ici dans le stack.
+                Positioned(
+                    top: 20,
+                    left: 30,
+                    child: Container(
+                        width: 200,
+                        child: Column(
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                Icon(
+                                    Icons.location_on,
+                                    color: Colors.red
+                                ),
+                                SizedBox(width: 15),
+                                Text('Parking à vélo',
+                                  style: TextStyle(
+                                    shadows: <Shadow>[
+                                      Shadow(
+                                        offset: Offset(0.0, 0.0),
+                                        blurRadius: 2.0,
+                                        color: Color.fromARGB(255, 255, 255, 255),
+                                      ),
+                                      Shadow(
+                                        offset: Offset(0.0, 0.0),
+                                        blurRadius: 2.0,
+                                        color: Color.fromARGB(255, 255, 255, 255),
+                                      ),
+                                      Shadow(
+                                        offset: Offset(0.0, 0.0),
+                                        blurRadius: 2.0,
+                                        color: Color.fromARGB(255, 255, 255, 255),
+                                      ),
+                                      Shadow(
+                                        offset: Offset(0.0, 0.0),
+                                        blurRadius: 2.0,
+                                        color: Color.fromARGB(255, 255, 255, 255),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Icon(
+                                    Icons.location_on,
+                                    color: Colors.brown
+                                ),
+                                SizedBox(width: 15),
+                                Text('Activités à Angers',
+                                  style: TextStyle(
+                                    shadows: <Shadow>[
+                                      Shadow(
+                                        offset: Offset(0.0, 0.0),
+                                        blurRadius: 2.0,
+                                        color: Color.fromARGB(255, 255, 255, 255),
+                                      ),
+                                      Shadow(
+                                        offset: Offset(0.0, 0.0),
+                                        blurRadius: 2.0,
+                                        color: Color.fromARGB(255, 255, 255, 255),
+                                      ),
+                                      Shadow(
+                                        offset: Offset(0.0, 0.0),
+                                        blurRadius: 2.0,
+                                        color: Color.fromARGB(255, 255, 255, 255),
+                                      ),
+                                      Shadow(
+                                        offset: Offset(0.0, 0.0),
+                                        blurRadius: 2.0,
+                                        color: Color.fromARGB(255, 255, 255, 255),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
+                    )
+                ),
+              ],)
 
             ],
 
@@ -183,6 +196,9 @@ class _CarteState extends State<Carte> {
     );
   }
 
+  void changerDropDown() {
+
+  }
   List<Marker> afficherMarkers() {
     List<Marker> listeR = [];
 
@@ -224,6 +240,9 @@ class _CarteState extends State<Carte> {
 
 
     coordinnesActivites = infoParkins;
-    infosActivites = listeInfos;
+    for (int i = 0; i < listeInfos.length; i++) {
+      infosActivites.add(listeInfos[i]["categorie"] + " - " + listeInfos[i]["nom_instal"]);
+    }
+    print(infosActivites);
   }
 }
