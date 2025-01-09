@@ -23,7 +23,7 @@ Future<List<List>> recupererActivites() async {
 
   String url = 'https://angersloiremetropole.opendatasoft.com'
       '/api/explore/v2.1/catalog/datasets/equipements-sportifs-angers'
-      '/records?limit=100&select=geo_point_2d, categorie, nom_instal';
+      '/records?limit=100&order_by=categorie&select=geo_point_2d, categorie, nom_instal';
 
   var request = http.Request('GET', Uri.parse(url));
   request.body = '''''';

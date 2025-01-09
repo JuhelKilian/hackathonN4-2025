@@ -36,8 +36,8 @@ class _CarteState extends State<Carte> {
     LatLng(47.4668, -0.5583),*/
   ];
 
-  List<String> infosActivites = [];
-
+  List<String> infosActivites = ["Toutes les activités"];
+  String nomChange = "Toutes les activités";
 
   @override
   void initState() {
@@ -51,16 +51,7 @@ class _CarteState extends State<Carte> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-        title: const Text('Réservation'),
-        leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () => setState(() {
-          recupererInfoParkings();
-          recupererInfoActivites();
-        })
-        ),
-    backgroundColor: Colors.white,
-    elevation: 0,
+        title: const Text('Angers sport'),
 
     ),
 
@@ -72,19 +63,25 @@ class _CarteState extends State<Carte> {
               Container(
                 child:
                   DropdownButton(
+value: nomChange,
                       items:
-                      infosActivites.map((String value) {
+                      infosActivites.map((String valeur) {
                         return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
+                        value: valeur,
+                        child: Text(valeur),
                         );
                         }
                       ).toList(),
-                      onChanged: (_) {})
+
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          nomChange = newValue!;
+                        });
+                      })
               ),
               Stack(
                 children: [
-                Expanded(child: Container(
+                Container(
                   child: FlutterMap(
                     options: MapOptions(
                       initialCenter: LatLng(latitudeAngers, longitudeAngers), // Center the map over London
@@ -102,8 +99,8 @@ class _CarteState extends State<Carte> {
                     ],
                   ),
                   height: 848,
-                )
                 ),
+
                 // Ajouter le reste ici dans le stack.
                 Positioned(
                     top: 20,
