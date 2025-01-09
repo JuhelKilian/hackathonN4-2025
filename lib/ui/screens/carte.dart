@@ -4,6 +4,8 @@ import 'package:latlong2/latlong.dart';
 import 'package:tous_au_sport/data/marker.dart';
 import 'package:tous_au_sport/utils/fonctionRequetes.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geolocator/geolocator.dart';
+
 class Carte extends StatefulWidget {
   const Carte({super.key, required this.title});
 
@@ -42,9 +44,14 @@ class _CarteState extends State<Carte> {
   int selectedIndex = 0;
   int selectedRadius = 2;
 
+  late LocationSettings locationSettings;
+  LatLng? position;
+
   @override
   void initState() {
     super.initState();
+    recupererLaPosition();
+    //Position? position = await recupererPosition();
     recupererInfoParkings();
     recupererInfoActivites();
   }
@@ -83,7 +90,6 @@ class _CarteState extends State<Carte> {
                           if (selectedIndex == 0) {
                             recupererInfoParkings();
                             changerInfoActivites();
-                            print(coordinnesMarkers.length);
                           }
                           actualiserListes(coordinnesActivitesSecours[selectedIndex], selectedRadius);
                           coordinnesActivites = [coordinnesActivitesSecours[selectedIndex]];
@@ -135,6 +141,7 @@ class _CarteState extends State<Carte> {
                                 ),
                               ],
                             ),
+
                             Row(
                               children: <Widget>[
                                 Icon(
@@ -145,6 +152,21 @@ class _CarteState extends State<Carte> {
                                 Text('Activités à Angers',
                                   style: TextStyle(
                                     shadows: afficherOmbres(8)
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Icon(
+                                    Icons.my_location_sharp,
+                                    color: Colors.blue,
+                                    size: 24
+                                ),
+                                SizedBox(width: 15),
+                                Text('Votre position',
+                                  style: TextStyle(
+                                      shadows: afficherOmbres(8)
                                   ),
                                 ),
                               ],
@@ -187,32 +209,44 @@ class _CarteState extends State<Carte> {
   }
   List<Marker> afficherMarkers() {
     List<Marker> listeR = [];
-
-    for(int i = 0; i < coordinnesMarkers.length; i++) {
+    if (position != null) {
       listeR.add(
-        Marker(
-          point: coordinnesMarkers[i],
-          child: Icon(
-              Icons.location_pin,
-              color: Colors.red
-          ),
-        ),
+          Marker(
+            point: position!,
+            child: Icon(
+                Icons.my_location_sharp,
+                color: Colors.blue,
+                size: 30
+            ),
+          )
       );
     }
 
-    for(int i = 0; i < coordinnesActivites.length; i++) {
-      listeR.add(
-        Marker(
-          point: coordinnesActivites[i],
-          child: Icon(
-              Icons.location_pin,
-              color: Colors.brown
+      for(int i = 0; i < coordinnesMarkers.length; i++) {
+        listeR.add(
+          Marker(
+            point: coordinnesMarkers[i],
+            child: Icon(
+                Icons.location_pin,
+                color: Colors.red
+            ),
           ),
-        ),
-      );
-    }
-    print(listeR.length);
-    return listeR;
+        );
+      }
+
+      for(int i = 0; i < coordinnesActivites.length; i++) {
+        listeR.add(
+          Marker(
+            point: coordinnesActivites[i],
+            child: Icon(
+                Icons.location_pin,
+                color: Colors.brown
+            ),
+          ),
+        );
+      }
+      print(listeR.length);
+      return listeR;
   }
 
   Future<void> recupererInfoParkings() async {
@@ -239,5 +273,43 @@ class _CarteState extends State<Carte> {
     List<LatLng> infoParkins = liste[0];
 
     coordinnesActivites = infoParkins;
+  }
+
+  Future<LatLng?> recupererLaPosition() async {
+    Position? laPosition = await recupererPosition();
+
+    position = LatLng(laPosition!.latitude, laPosition.longitude);
+
+    return position;
+  }
+
+  Future<Position?> recupererPosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Vous avez refusé l\'accès à la localisation')));
+      return null;
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Vous avez refusé l\'accès à la localisation')));
+        return null;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Vous avez refusé l\'accès à la localisation')));
+      return null;
+    }
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Vous avez autorisé la localisation, elle va se mettre à jour sur la carte')));
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    return position;
   }
 }
