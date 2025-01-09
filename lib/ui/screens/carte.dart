@@ -186,8 +186,12 @@ class _CarteState extends State<Carte> {
   }
 
   Future<void> actualiserListes(LatLng coordinnes, int Radius) async {
+
     List<LatLng> listes = await recupererParkingsDansZone(coordinnes, Radius);
-    coordinnesMarkers = listes;
+    setState(() {
+      coordinnesMarkers = listes;
+
+    });
     //coordinnesActivites = listes[1];
   }
   List<Shadow> afficherOmbres(int n) {
