@@ -42,7 +42,7 @@ class _CarteState extends State<Carte> {
   List<String> infosActivites = ["Toutes les activités"];
   String nomChange = "Toutes les activités";
   int selectedIndex = 0;
-  int selectedRadius = 2;
+  double selectedRadius = 1;
 
   late LocationSettings locationSettings;
   LatLng? position;
@@ -61,7 +61,7 @@ class _CarteState extends State<Carte> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-        title: const Text('Angers sport'),
+        title: const Text('Tous au sport !'),
 
     ),
 
@@ -82,6 +82,7 @@ class _CarteState extends State<Carte> {
                         );
                         }
                       ).toList(),
+                      isExpanded: true,
 
                       onChanged: (String? newValue) {
                         setState(() {
@@ -91,11 +92,17 @@ class _CarteState extends State<Carte> {
                             recupererInfoParkings();
                             changerInfoActivites();
                           }
-                          actualiserListes(coordinnesActivitesSecours[selectedIndex], selectedRadius);
-                          coordinnesActivites = [coordinnesActivitesSecours[selectedIndex]];
+                          else {
+                            coordinnesActivites =
+                          [coordinnesActivitesSecours[selectedIndex]];
+                            actualiserListes(
+                                coordinnesActivitesSecours[selectedIndex],
+                                selectedRadius);
 
+                          }
                         });
-                      })
+                      }),
+                width:400.0,
               ),
               Stack(
                 children: [
@@ -116,7 +123,7 @@ class _CarteState extends State<Carte> {
                       ),
                     ],
                   ),
-                  height: 848,
+                  height: 687,
                 ),
 
                 // Ajouter le reste ici dans le stack.
@@ -185,7 +192,7 @@ class _CarteState extends State<Carte> {
     );
   }
 
-  Future<void> actualiserListes(LatLng coordinnes, int Radius) async {
+  Future<void> actualiserListes(LatLng coordinnes, double Radius) async {
 
     List<LatLng> listes = await recupererParkingsDansZone(coordinnes, Radius);
     setState(() {
@@ -276,7 +283,9 @@ class _CarteState extends State<Carte> {
     List liste = await recupererActivites();
     List<LatLng> infoParkins = liste[0];
 
-    coordinnesActivites = infoParkins;
+    setState(() {
+      coordinnesActivites = infoParkins;
+    });
   }
 
   Future<LatLng?> recupererLaPosition() async {

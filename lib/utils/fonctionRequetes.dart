@@ -124,7 +124,7 @@ Future<List<List>> actualiser(LatLng coordonnees, nbKilometres) async {
   return [resultats];
 }
 
-Future<List<LatLng>> recupererParkingsDansZone(LatLng coords, int nbKm) async {
+Future<List<LatLng>> recupererParkingsDansZone(LatLng coords, double nbKm) async {
   /*
     * fonction recupererParkings utilise les api pubilques pour
     * recuperer les parkings à vélos
