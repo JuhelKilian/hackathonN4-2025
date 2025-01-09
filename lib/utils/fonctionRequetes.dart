@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-Future<List<LatLng>> recupererActivites() async {
+Future<List<List>> recupererActivites() async {
   /*
     * fonction recupererParkings utilise les api pubilques pour
     * recuperer les parkings à vélos
@@ -13,7 +13,8 @@ Future<List<LatLng>> recupererActivites() async {
    */
 
   int plus = 1;
-  List<LatLng> listeR = [];
+  List<LatLng> listeCoord = [];
+  List<Map> listeInfos = [];
 
   // Création de la requete
   var headers = {
@@ -22,7 +23,7 @@ Future<List<LatLng>> recupererActivites() async {
 
   String url = 'https://angersloiremetropole.opendatasoft.com'
       '/api/explore/v2.1/catalog/datasets/equipements-sportifs-angers'
-      '/records?limit=100';
+      '/records?limit=100&select=geo_point_2d, categorie, nom_instal';
 
   var request = http.Request('GET', Uri.parse(url));
   request.body = '''''';
@@ -41,11 +42,16 @@ Future<List<LatLng>> recupererActivites() async {
     dynamic reponse2 = reponse["results"];
 
     for(int i = 0; i < reponse2.length; i++) {
-      listeR.add(LatLng(reponse2[i]['geo_point_2d']["lat"],
+      listeCoord.add(LatLng(reponse2[i]['geo_point_2d']["lat"],
           reponse2[i]['geo_point_2d']["lon"]));
+
+      listeInfos.add({"categorie" : reponse2[i]['categorie'],
+        "nom_instal": reponse2[i]['nom_instal']});
     }
 
-    return listeR;
+    List<List> retour = [listeCoord, listeInfos];
+
+    return retour;
 
   } else {
     throw Exception('Erreur serveur: ${response.reasonPhrase}');
@@ -61,8 +67,8 @@ Future<List<LatLng>> recupererParkings() async {
    */
 
 
-  List<LatLng> listeR = [];
-  Map<String, dynamic> reponse = {};
+  List<LatLng> listeCoord = [];
+
   int maxI = 125;
 
   int max = 100;
@@ -74,7 +80,7 @@ Future<List<LatLng>> recupererParkings() async {
   //do {
     String url = 'https://angersloiremetropole.opendatasoft.com'
         '//api/explore/v2.1/catalog/datasets/parking-velo-angers/'
-        'records?select=geo_point_2d&limit=$max&offset=$index';
+        'records?limit=$max&offset=$index';
     var headers = {
       'Accept': 'application/json',
     };
@@ -95,8 +101,8 @@ Future<List<LatLng>> recupererParkings() async {
       dynamic reponse2 = reponse["results"];
 
       for(int i = 0; i < reponse2.length; i++) {
-        plus++;
-        listeR.add(LatLng(reponse2[i]['geo_point_2d']["lat"],
+
+        listeCoord.add(LatLng(reponse2[i]['geo_point_2d']["lat"],
             reponse2[i]['geo_point_2d']["lon"]));
       }
 
@@ -109,5 +115,5 @@ Future<List<LatLng>> recupererParkings() async {
   /*}
   while(index < 1);*/
 
-  return listeR;
+  return listeCoord;
 }

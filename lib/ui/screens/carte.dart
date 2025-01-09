@@ -36,12 +36,14 @@ class _CarteState extends State<Carte> {
     LatLng(47.4668, -0.5583),*/
   ];
 
+  List<Map<dynamic, dynamic>> infosActivites = [];
+
 
   @override
   void initState() {
     super.initState();
-    recupererInfoParkings();
-    recupererInfoActivites();
+    /*recupererInfoParkings();
+    recupererInfoActivites();*/
   }
 
 // List<LatLng> coordinnesMarkers = await recupererInfoParkings();
@@ -65,25 +67,31 @@ class _CarteState extends State<Carte> {
     body:
       Center(
         child: Container(
-          child: Stack(
+          child: Column(
             children: [
-              FlutterMap(
-                options: MapOptions(
-                  initialCenter: LatLng(latitudeAngers, longitudeAngers), // Center the map over London
-                  initialZoom: 13,
-                ),
-                children: [
-                  TileLayer( // Display map tiles from any source
-                    urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', // OSMF's Tile Server
-                    userAgentPackageName: 'com.example.app',
-                    // And many more recommended properties!
-                  ),
-                  MarkerLayer(
-                      markers: afficherMarkers()
-                  ),
-                ],
+              Container(
+                child: Text("test"),
               ),
 
+              Container(
+                  child: FlutterMap(
+                    options: MapOptions(
+                      initialCenter: LatLng(latitudeAngers, longitudeAngers), // Center the map over London
+                      initialZoom: 13,
+                    ),
+                    children: [
+                      TileLayer( // Display map tiles from any source
+                        urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', // OSMF's Tile Server
+                        userAgentPackageName: 'com.example.app',
+                        // And many more recommended properties!
+                      ),
+                      MarkerLayer(
+                          markers: afficherMarkers()
+                      ),
+                    ],
+                  ),
+                  height:500
+                ),
               // Ajouter le reste ici dans le stack.
               Positioned(
                 top: 20,
@@ -98,7 +106,7 @@ class _CarteState extends State<Carte> {
                               Icons.location_on,
                               color: Colors.red
                           ),
-                          SizedBox(width: 12),
+                          SizedBox(width: 15),
                           Text('Parking à vélo',
                             style: TextStyle(
                               shadows: <Shadow>[
@@ -122,7 +130,6 @@ class _CarteState extends State<Carte> {
                                   blurRadius: 2.0,
                                   color: Color.fromARGB(255, 255, 255, 255),
                                 ),
-
                               ],
                             ),
                           ),
@@ -134,8 +141,8 @@ class _CarteState extends State<Carte> {
                               Icons.location_on,
                               color: Colors.brown
                           ),
-                          SizedBox(width: 12),
-                          Text('Activité à Angers',
+                          SizedBox(width: 15),
+                          Text('Activités à Angers',
                             style: TextStyle(
                               shadows: <Shadow>[
                                 Shadow(
@@ -158,7 +165,6 @@ class _CarteState extends State<Carte> {
                                   blurRadius: 2.0,
                                   color: Color.fromARGB(255, 255, 255, 255),
                                 ),
-
                               ],
                             ),
                           ),
@@ -167,8 +173,10 @@ class _CarteState extends State<Carte> {
                     ],
                   )
                 )
-              )
+              ),
+
             ],
+
           ),
         ),
       )
@@ -209,9 +217,13 @@ class _CarteState extends State<Carte> {
     coordinnesMarkers = infoParkins;
   }
 
-  Future<List<LatLng>> recupererInfoActivites() async {
-    List<LatLng> infoParkins = await recupererActivites();
+  Future<void> recupererInfoActivites() async {
+    List liste = await recupererActivites();
+    List<LatLng> infoParkins = liste[0];
+    List<Map<dynamic, dynamic>> listeInfos = liste[1];
+
+
     coordinnesActivites = infoParkins;
-    return coordinnesActivites;
+    infosActivites = listeInfos;
   }
 }
