@@ -31,6 +31,7 @@ class _CarteState extends State<Carte> {
     /*LatLng(47.4698, -0.5593),
     LatLng(47.4688, -0.5583),*/
   ];
+  List<LatLng> coordinnesActivitesSecours = [];
   List<LatLng> coordinnesActivites = [
     /*LatLng(47.4678, -0.5593),
     LatLng(47.4668, -0.5583),*/
@@ -38,6 +39,8 @@ class _CarteState extends State<Carte> {
 
   List<String> infosActivites = ["Toutes les activités"];
   String nomChange = "Toutes les activités";
+  int selectedIndex = 0;
+  int selectedRadius = 2;
 
   @override
   void initState() {
@@ -63,7 +66,7 @@ class _CarteState extends State<Carte> {
               Container(
                 child:
                   DropdownButton(
-value: nomChange,
+                      value: nomChange,
                       items:
                       infosActivites.map((String valeur) {
                         return DropdownMenuItem<String>(
@@ -76,6 +79,15 @@ value: nomChange,
                       onChanged: (String? newValue) {
                         setState(() {
                           nomChange = newValue!;
+                          selectedIndex = infosActivites.indexOf(nomChange);
+                          if (selectedIndex == 0) {
+                            recupererInfoParkings();
+                            changerInfoActivites();
+                            print(coordinnesMarkers.length);
+                          }
+                          actualiserListes(coordinnesActivitesSecours[selectedIndex], selectedRadius);
+                          coordinnesActivites = [coordinnesActivitesSecours[selectedIndex]];
+
                         });
                       })
               ),
@@ -118,28 +130,7 @@ value: nomChange,
                                 SizedBox(width: 15),
                                 Text('Parking à vélo',
                                   style: TextStyle(
-                                    shadows: <Shadow>[
-                                      Shadow(
-                                        offset: Offset(0.0, 0.0),
-                                        blurRadius: 2.0,
-                                        color: Color.fromARGB(255, 255, 255, 255),
-                                      ),
-                                      Shadow(
-                                        offset: Offset(0.0, 0.0),
-                                        blurRadius: 2.0,
-                                        color: Color.fromARGB(255, 255, 255, 255),
-                                      ),
-                                      Shadow(
-                                        offset: Offset(0.0, 0.0),
-                                        blurRadius: 2.0,
-                                        color: Color.fromARGB(255, 255, 255, 255),
-                                      ),
-                                      Shadow(
-                                        offset: Offset(0.0, 0.0),
-                                        blurRadius: 2.0,
-                                        color: Color.fromARGB(255, 255, 255, 255),
-                                      ),
-                                    ],
+                                    shadows: afficherOmbres(8)
                                   ),
                                 ),
                               ],
@@ -153,28 +144,7 @@ value: nomChange,
                                 SizedBox(width: 15),
                                 Text('Activités à Angers',
                                   style: TextStyle(
-                                    shadows: <Shadow>[
-                                      Shadow(
-                                        offset: Offset(0.0, 0.0),
-                                        blurRadius: 2.0,
-                                        color: Color.fromARGB(255, 255, 255, 255),
-                                      ),
-                                      Shadow(
-                                        offset: Offset(0.0, 0.0),
-                                        blurRadius: 2.0,
-                                        color: Color.fromARGB(255, 255, 255, 255),
-                                      ),
-                                      Shadow(
-                                        offset: Offset(0.0, 0.0),
-                                        blurRadius: 2.0,
-                                        color: Color.fromARGB(255, 255, 255, 255),
-                                      ),
-                                      Shadow(
-                                        offset: Offset(0.0, 0.0),
-                                        blurRadius: 2.0,
-                                        color: Color.fromARGB(255, 255, 255, 255),
-                                      ),
-                                    ],
+                                    shadows: afficherOmbres(8)
                                   ),
                                 ),
                               ],
@@ -193,6 +163,25 @@ value: nomChange,
     );
   }
 
+  Future<void> actualiserListes(LatLng coordinnes, int Radius) async {
+    List<LatLng> listes = await recupererParkingsDansZone(coordinnes, Radius);
+    coordinnesMarkers = listes;
+    //coordinnesActivites = listes[1];
+  }
+  List<Shadow> afficherOmbres(int n) {
+    List<Shadow> listeO = [];
+
+    for(int i = 0; i < n; i++) {
+      listeO.add(
+        Shadow(
+          offset: Offset(0.0, 0.0),
+          blurRadius: 3.0,
+          color: Color.fromARGB(255, 255, 255, 255),
+        ),
+      );
+    }
+    return listeO;
+  }
   void changerDropDown() {
 
   }
@@ -222,6 +211,7 @@ value: nomChange,
         ),
       );
     }
+    print(listeR.length);
     return listeR;
   }
 
@@ -237,9 +227,17 @@ value: nomChange,
 
 
     coordinnesActivites = infoParkins;
+    coordinnesActivitesSecours = infoParkins;
     for (int i = 0; i < listeInfos.length; i++) {
-      infosActivites.add(listeInfos[i]["categorie"] + " - " + listeInfos[i]["nom_instal"]);
+      infosActivites.add((i+1).toString() + " : " + listeInfos[i]["categorie"] + " - " + listeInfos[i]["nom_instal"]);
     }
     print(infosActivites);
+  }
+
+  Future<void> changerInfoActivites() async {
+    List liste = await recupererActivites();
+    List<LatLng> infoParkins = liste[0];
+
+    coordinnesActivites = infoParkins;
   }
 }
